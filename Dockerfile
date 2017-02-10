@@ -14,10 +14,11 @@ ADD dot_setup /home/taiga/.setup/data.sh
 RUN chown -R taiga:taiga /home/taiga/.setup && \
     sudo -u taiga git clone https://github.com/taigaio/taiga-scripts.git /home/taiga/taiga-scripts
 WORKDIR /home/taiga/taiga-scripts
-RUN sed -i 's/-eq 0/-lt 0/g' setup-server.sh && \
-    echo "taiga ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
+RUN echo "taiga ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
     export HOME=/home/taiga && \
     service postgresql start && \
     sudo -u taiga bash setup-server.sh
+ADD *.conf /etc/supervisor/conf.d/
+ADD start-backend.sh /home/taiga/taiga-backend/
 EXPOSE 80
 CMD ["/usr/bin/supervisord", "-n"]
