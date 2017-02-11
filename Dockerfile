@@ -1,6 +1,6 @@
 FROM ubuntu:16.10
 RUN apt-get update && \
-    apt-get -y install supervisor git postgresql sudo bash && \
+    apt-get -y install git postgresql sudo bash && \
     adduser \
     --system \
     --shell /bin/bash \
@@ -18,7 +18,7 @@ RUN echo "taiga ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
     export HOME=/home/taiga && \
     service postgresql start && \
     sudo -u taiga bash setup-server.sh
-ADD *.conf /etc/supervisor/conf.d/
-ADD start-backend.sh /home/taiga/taiga-backend/
+ADD start-taiga.sh /
 EXPOSE 80
-CMD ["/usr/bin/supervisord", "-n"]
+USER taiga
+CMD ["/start-taiga.sh"]
